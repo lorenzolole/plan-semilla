@@ -1,0 +1,11 @@
+{
+  "appId": "com.lorenzolole.plansemilla",
+  "appName": "Plan Semilla",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "automatic"
+  }
+}

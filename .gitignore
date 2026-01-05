@@ -33,3 +33,18 @@ backend/instance/
 
 # Vercel
 .vercel/
+
+# Capacitor - Build folder
+www/
+
+# iOS Build artifacts (keep ios/ in git, but not build products)
+ios/App/Pods/
+ios/App/build/
+*.xcuserstate
+*.xcworkspacedata
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+
