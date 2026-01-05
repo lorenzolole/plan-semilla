@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+*.egg-info/
+dist/
+build/
+venv/
+env/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Backend
+backend/*.db
+backend/instance/
+
+# Cache
+.cache/
+
+# Vercel
+.vercel/

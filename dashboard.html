@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Plan Semilla</title>
+    <meta name="description"
+        content="Panel de control de inversiones Plan Semilla - Tu camino hacia la libertad financiera">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config with Custom Colors -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        // Primary - Neon Lime
+                        primary: {
+                            50: '#F7FFE6',
+                            100: '#ECFFC2',
+                            200: '#DEFF8E',
+                            300: '#D0FF5D',
+                            400: '#C6FF34',
+                            500: '#B9F20A',
+                            600: '#98C800',
+                            700: '#749A00',
+                            800: '#4F6B00',
+                            900: '#2F3F00',
+                        },
+                        // Secondary - Cool Blue
+                        secondary: {
+                            50: '#EEF6FF',
+                            100: '#D9EAFF',
+                            200: '#B9D6FF',
+                            300: '#8BB9FF',
+                            400: '#5B96FF',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        },
+                        // Dark Mode Surfaces
+                        dark: {
+                            bg: '#0B0F14',
+                            surface1: '#0F141B',
+                            surface2: '#121A23',
+                            surface3: '#182231',
+                        },
+                        // Light Mode Surfaces
+                        light: {
+                            bg: '#F7F8FA',
+                            surface1: '#FFFFFF',
+                            surface2: '#FFFFFF',
+                            surface3: '#F3F5F7',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation1-dark': '0 10px 30px rgba(0,0,0,0.35)',
+                        'elevation2-dark': '0 16px 50px rgba(0,0,0,0.45)',
+                        'elevation1-light': '0 10px 28px rgba(15,23,42,0.10)',
+                        'elevation2-light': '0 16px 48px rgba(15,23,42,0.14)',
+                        'focus-primary': '0 0 0 3px rgba(185,242,10,0.28)',
+                        'focus-secondary': '0 0 0 3px rgba(59,130,246,0.20)',
+                    },
+                    borderRadius: {
+                        'card': '14px',
+                        'button': '12px',
+                        'input': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-feature-settings: 'tnum' on, 'lnum' on;
+        }
+
+        /* Custom scrollbar for dark mode */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #0F141B;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #182231;
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #243548;
+        }
+
+        /* Light mode scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F3F5F7;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+
+        /* Transitions */
+        .transition-theme {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Credit Card Gradient */
+        .member-card-gradient {
+            background: linear-gradient(135deg, #0A0C0F 0%, #101319 50%, #182231 100%);
+        }
+
+        .member-card-glow {
+            box-shadow: 0 0 60px rgba(185, 242, 10, 0.15), 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Chart bar animation */
+        .chart-bar {
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.02);
+        }
+
+        /* Table row hover */
+        .table-row-hover:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .light .table-row-hover:hover {
+            background: rgba(15, 23, 42, 0.03);
+        }
+    </style>
+</head>
+
+<body
+    class="font-inter antialiased transition-theme bg-light-bg dark:bg-dark-bg text-slate-800 dark:text-white/80 min-h-screen">
+
+    <!-- Main Container -->
+    <div class="w-full min-h-screen bg-light-bg dark:bg-dark-bg">
+
+        <!-- Centered Content Wrapper -->
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-7 xl:px-8 py-6">
+
+            <!-- ==================== TOP BAR ==================== -->
+            <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                <!-- Left Actions -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <!-- Logo/Brand -->
+                    <a href="index.html" class="flex items-center gap-2 mr-4">
+                        <span class="text-2xl">🌱</span>
+                        <span class="text-xl font-bold text-slate-800 dark:text-white/90">Plan Semilla</span>
+                    </a>
+
+                    <!-- Generate Report Button -->
+                    <button onclick="generateReport()" class="btn-secondary">
+                        <i class="fa-solid fa-file-lines text-sm"></i>
+                        <span>Generar Reporte</span>
+                    </button>
+
+                    <!-- Export Data Button -->
+                    <button onclick="exportData()" class="btn-secondary">
+                        <i class="fa-solid fa-download text-sm"></i>
+                        <span>Exportar Datos</span>
+                    </button>
+                </div>
+
+                <!-- Right: Search + Theme Toggle -->
+                <div class="flex items-center gap-3">
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-80 lg:w-96">
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 text-sm"></i>
+                        <input type="text" placeholder="Buscar activo o estrategia..."
+                            class="w-full h-10 pl-11 pr-4 rounded-input bg-white dark:bg-dark-surface2 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white/80 placeholder:text-slate-400 dark:placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400/30 focus:border-primary-400 transition-all">
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" id="theme-toggle"
+                        class="w-10 h-10 flex items-center justify-center rounded-button bg-white dark:bg-dark-surface2 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/60 hover:text-primary-500 dark:hover:text-primary-400 transition-all shadow-sm dark:shadow-none">
+                        <i class="fa-solid fa-sun text-sm" id="theme-icon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ==================== KPI CARDS ROW ==================== -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+
+                <!-- KPI Card 1: Patrimonio Total -->
+                <div class="kpi-card">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-[13px] font-medium text-slate-500 dark:text-white/60 tracking-wide">Patrimonio
+                            Total</span>
+                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-400/10">
+                            <i class="fa-solid fa-wallet text-primary-500 dark:text-primary-400 text-sm"></i>
+                        </span>
+                    </div>
+                    <div class="text-[28px] font-semibold text-slate-800 dark:text-white/92 leading-tight mb-2"
+                        id="kpi-patrimonio">
+                        $45,231.00
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                        <i class="fa-solid fa-arrow-trend-up text-green-500 dark:text-green-400"></i>
+                        <span>+8.2% vs Mes Anterior</span>
+                    </div>
+                </div>
+
+                <!-- KPI Card 2: Retorno Real YTD -->
+                <div class="kpi-card">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-[13px] font-medium text-slate-500 dark:text-white/60 tracking-wide">Retorno
+                            Real (YTD)</span>
+                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-green-500/10">
+                            <i class="fa-solid fa-chart-line text-green-500 dark:text-green-400 text-sm"></i>
+                        </span>
+                    </div>
+                    <div class="text-[28px] font-semibold text-green-500 dark:text-green-400 leading-tight mb-2"
+                        id="kpi-retorno">
+                        +12.4%
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                        <i class="fa-solid fa-shield-halved text-blue-500 dark:text-blue-400"></i>
+                        <span>Ajustado por inflación</span>
+                    </div>
+                </div>
+
+                <!-- KPI Card 3: Liquidez Disponible -->
+                <div class="kpi-card sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-[13px] font-medium text-slate-500 dark:text-white/60 tracking-wide">Liquidez
+                            Disponible</span>
+                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary-400/10">
+                            <i
+                                class="fa-solid fa-money-bill-wave text-secondary-500 dark:text-secondary-400 text-sm"></i>
+                        </span>
+                    </div>
+                    <div class="text-[28px] font-semibold text-slate-800 dark:text-white/92 leading-tight mb-2"
+                        id="kpi-liquidez">
+                        $8,500.00
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                        <i class="fa-solid fa-building-columns text-orange-500 dark:text-orange-400"></i>
+                        <span>Fondo Itaú / Letras</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ==================== MIDDLE SECTION (2 COLUMNS) ==================== -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+
+                <!-- Left Card: Asset Allocation (Spending Limits Style) -->
+                <div class="lg:col-span-5 dashboard-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-sm font-semibold text-slate-800 dark:text-white/92">Asignación de Activos</h3>
+                        <button
+                            class="text-slate-400 dark:text-white/40 hover:text-slate-600 dark:hover:text-white/60 transition-colors">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+
+                    <!-- Total Value -->
+                    <div class="mb-6">
+                        <span class="text-[13px] text-slate-500 dark:text-white/50 mb-1 block">Distribución
+                            Inteligente</span>
+                        <span class="text-2xl font-semibold text-slate-800 dark:text-white/92"
+                            id="allocation-total">$45,231.00</span>
+                    </div>
+
+                    <!-- Progress Bars -->
+                    <div class="space-y-4 mb-6" id="allocation-bars">
+                        <!-- S&P 500 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[13px] font-medium text-slate-700 dark:text-white/80">S&P 500</span>
+                                <span
+                                    class="text-[13px] font-semibold text-primary-500 dark:text-primary-400">45%</span>
+                            </div>
+                            <div class="h-2 bg-slate-200 dark:bg-dark-surface3 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary-500 dark:bg-primary-400 rounded-full" style="width: 45%">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bitcoin -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[13px] font-medium text-slate-700 dark:text-white/80">Bitcoin</span>
+                                <span
+                                    class="text-[13px] font-semibold text-primary-600 dark:text-primary-300">35%</span>
+                            </div>
+                            <div class="h-2 bg-slate-200 dark:bg-dark-surface3 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary-600 dark:bg-primary-300 rounded-full" style="width: 35%">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Liquidez -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[13px] font-medium text-slate-700 dark:text-white/80">Liquidez</span>
+                                <span
+                                    class="text-[13px] font-semibold text-primary-700 dark:text-primary-200">20%</span>
+                            </div>
+                            <div class="h-2 bg-slate-200 dark:bg-dark-surface3 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary-700 dark:bg-primary-200 rounded-full" style="width: 20%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member Card Visual -->
+                    <div class="member-card-gradient member-card-glow rounded-2xl p-5 relative overflow-hidden">
+                        <!-- Glow Effect -->
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-400/20 rounded-full blur-3xl"></div>
+
+                        <!-- Card Content -->
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-8">
+                                <span class="text-2xl">🌱</span>
+                                <span class="text-xs font-bold text-primary-400 uppercase tracking-wider">Premium</span>
+                            </div>
+
+                            <div class="mb-6">
+                                <span class="text-lg font-semibold tracking-wider text-white/80">•••• •••• ••••
+                                    2030</span>
+                            </div>
+
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <span class="text-[10px] uppercase text-white/40 block mb-1">Miembro</span>
+                                    <span class="text-sm font-medium text-white/80">Plan Semilla</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] uppercase text-white/40 block mb-1">Estrategia</span>
+                                    <span class="text-sm font-semibold text-primary-400">Modo Soberano</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Card: Portfolio Evolution (Available Balance Style) -->
+                <div class="lg:col-span-7 dashboard-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-sm font-semibold text-slate-800 dark:text-white/92 mb-1">Evolución del
+                                Portafolio</h3>
+                            <span class="text-2xl font-semibold text-slate-800 dark:text-white/92"
+                                id="portfolio-value">$45,231.00</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="showAportarModal()" class="btn-primary">
+                                <i class="fa-solid fa-plus text-sm"></i>
+                                <span>Aportar</span>
+                            </button>
+                            <button onclick="showRebalancearModal()" class="btn-secondary">
+                                <i class="fa-solid fa-scale-balanced text-sm"></i>
+                                <span>Rebalancear</span>
+                            </button>
+                            <button
+                                class="w-10 h-10 flex items-center justify-center rounded-button bg-slate-100 dark:bg-dark-surface3 text-slate-400 dark:text-white/40 hover:text-slate-600 dark:hover:text-white/60 transition-colors">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- View Toggle -->
+                    <div
+                        class="flex items-center gap-1 p-1 bg-slate-100 dark:bg-dark-surface2 rounded-full w-fit mb-6 border border-slate-200 dark:border-white/6">
+                        <button onclick="setChartView('bar')" id="view-bar"
+                            class="px-4 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-dark-surface3 text-slate-800 dark:text-white/90 transition-all shadow-sm dark:shadow-none">
+                            Vista Barras
+                        </button>
+                        <button onclick="setChartView('line')" id="view-line"
+                            class="px-4 py-1.5 rounded-full text-xs font-medium text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/70 transition-all">
+                            Vista Línea
+                        </button>
+                    </div>
+
+                    <!-- Bar Chart -->
+                    <div class="relative h-52">
+                        <canvas id="portfolio-chart"></canvas>
+                    </div>
+
+                    <!-- Footer -->
+                    <div
+                        class="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50 mt-4 pt-4 border-t border-slate-200 dark:border-white/6">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Actualizado: Enero 2026</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ==================== BOTTOM SECTION: TRANSACTIONS TABLE ==================== -->
+            <section class="dashboard-card">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-white/92">Movimientos Recientes</h3>
+
+                    <!-- Toolbar -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Search -->
+                        <div class="relative">
+                            <i
+                                class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 text-xs"></i>
+                            <input type="text" placeholder="Buscar transacción..."
+                                class="h-10 pl-9 pr-4 w-60 rounded-input bg-white dark:bg-dark-surface2 border border-slate-200 dark:border-white/6 text-slate-700 dark:text-white/80 placeholder:text-slate-400 dark:placeholder:text-white/40 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary-400/30 focus:border-primary-400 transition-all">
+                        </div>
+
+                        <!-- Date Filter -->
+                        <button
+                            class="h-10 px-4 rounded-button bg-white dark:bg-dark-surface2 border border-slate-200 dark:border-white/6 text-slate-600 dark:text-white/60 text-[13px] font-medium flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-dark-surface3 transition-colors">
+                            <i class="fa-solid fa-calendar text-xs"></i>
+                            <span>Fecha</span>
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </button>
+
+                        <!-- Import -->
+                        <button onclick="importData()" class="btn-secondary">
+                            <i class="fa-solid fa-file-import text-sm"></i>
+                            <span>Importar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-white/8">
+                                <th
+                                    class="text-left py-3 px-4 text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wider">
+                                    Activo</th>
+                                <th
+                                    class="text-left py-3 px-4 text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wider">
+                                    Operación</th>
+                                <th
+                                    class="text-right py-3 px-4 text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wider">
+                                    Monto</th>
+                                <th
+                                    class="text-center py-3 px-4 text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wider">
+                                    Estado</th>
+                                <th
+                                    class="text-right py-3 px-4 text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wider">
+                                    Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Transactions will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-200 dark:border-white/6">
+                    <span class="text-xs text-slate-500 dark:text-white/50" id="pagination-info">Mostrando 1-5 de 24
+                        movimientos</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="prevPage()"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80 transition-colors">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <button onclick="goToPage(1)"
+                            class="pagination-btn w-8 h-8 flex items-center justify-center rounded-lg bg-primary-500 dark:bg-primary-400 text-white dark:text-dark-bg font-semibold text-xs">1</button>
+                        <button onclick="goToPage(2)"
+                            class="pagination-btn w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80 transition-colors text-xs">2</button>
+                        <button onclick="goToPage(3)"
+                            class="pagination-btn w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80 transition-colors text-xs">3</button>
+                        <button onclick="nextPage()"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80 transition-colors">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-8 pt-6 border-t border-slate-200 dark:border-white/6 text-center">
+                <p class="text-xs text-slate-400 dark:text-white/40">
+                    Plan Semilla © 2026 — Tu camino hacia la libertad financiera 🌱
+                </p>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Aportar Modal -->
+    <div id="aportar-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div
+            class="bg-dark-surface1 border border-white/10 rounded-card p-6 w-full max-w-md mx-4 shadow-elevation2-dark">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-white/92">Nuevo Aporte</h3>
+                <button onclick="closeAportarModal()" class="text-white/40 hover:text-white/80 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-white/60 mb-2">Monto a Aportar</label>
+                    <input type="number" placeholder="$1,000.00"
+                        class="w-full h-12 px-4 rounded-input bg-dark-surface2 border border-white/10 text-white/80 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-400/30 focus:border-primary-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-white/60 mb-2">Estrategia</label>
+                    <select
+                        class="w-full h-12 px-4 rounded-input bg-dark-surface2 border border-white/10 text-white/80 focus:outline-none focus:ring-2 focus:ring-primary-400/30 focus:border-primary-400">
+                        <option>Mantener proporción actual</option>
+                        <option>Todo a S&P 500</option>
+                        <option>Todo a Bitcoin</option>
+                        <option>Todo a Liquidez</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeAportarModal()" class="flex-1 btn-secondary justify-center">Cancelar</button>
+                <button onclick="confirmarAporte()" class="flex-1 btn-primary justify-center">Confirmar Aporte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rebalancear Modal -->
+    <div id="rebalancear-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div
+            class="bg-dark-surface1 border border-white/10 rounded-card p-6 w-full max-w-md mx-4 shadow-elevation2-dark">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-white/92">Rebalancear Portafolio</h3>
+                <button onclick="closeRebalancearModal()" class="text-white/40 hover:text-white/80 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="bg-dark-surface2 rounded-lg p-4 mb-4">
+                <p class="text-sm text-white/60 mb-3">Esta acción ajustará tu portafolio a la distribución objetivo:</p>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-white/80">S&P 500</span><span
+                            class="text-primary-400 font-semibold">45%</span></div>
+                    <div class="flex justify-between"><span class="text-white/80">Bitcoin</span><span
+                            class="text-primary-400 font-semibold">35%</span></div>
+                    <div class="flex justify-between"><span class="text-white/80">Liquidez</span><span
+                            class="text-primary-400 font-semibold">20%</span></div>
+                </div>
+            </div>
+            <p class="text-xs text-yellow-400/80 mb-4">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                Esto puede generar operaciones de compra/venta.
+            </p>
+            <div class="flex gap-3">
+                <button onclick="closeRebalancearModal()" class="flex-1 btn-secondary justify-center">Cancelar</button>
+                <button onclick="confirmarRebalanceo()" class="flex-1 btn-primary justify-center">Rebalancear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+        <div
+            class="bg-dark-surface1 border border-white/10 rounded-card px-5 py-3 shadow-elevation2-dark flex items-center gap-3">
+            <i id="toast-icon" class="fa-solid fa-check-circle text-green-400"></i>
+            <span id="toast-message" class="text-sm text-white/80">Operación exitosa</span>
+        </div>
+    </div>
+
+    <!-- ==================== COMPONENT STYLES ==================== -->
+    <style>
+        /* Button Styles */
+        .btn-primary {
+            @apply h-10 px-4 rounded-button bg-primary-400 text-dark-bg font-semibold text-[13px] flex items-center gap-2 hover:bg-primary-300 active:bg-primary-500 transition-all shadow-sm;
+        }
+
+        .btn-secondary {
+            @apply h-10 px-4 rounded-button bg-dark-surface2 border border-white/6 text-white/80 font-medium text-[13px] flex items-center gap-2 hover:bg-dark-surface3 active:bg-dark-surface1 transition-all;
+        }
+
+        /* KPI Card */
+        .kpi-card {
+            @apply p-5 rounded-card bg-dark-surface2 border border-white/6 shadow-elevation1-dark transition-all hover:border-white/10 hover:shadow-elevation2-dark;
+        }
+
+        /* Dashboard Card */
+        .dashboard-card {
+            @apply p-5 rounded-card bg-dark-surface2 border border-white/6 shadow-elevation1-dark;
+        }
+
+        /* Light Mode Overrides */
+        :root:not(.dark) .kpi-card,
+        :root:not(.dark) .dashboard-card {
+            @apply bg-light-surface1 border-slate-200/60 shadow-elevation1-light;
+        }
+
+        :root:not(.dark) .btn-secondary {
+            @apply bg-light-surface2 border-slate-200 text-slate-700 hover:bg-light-surface3;
+        }
+
+        :root:not(.dark) body {
+            @apply bg-light-bg text-slate-800;
+        }
+    </style>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        // ========== GLOBAL STATE ==========
+        let portfolioChart = null;
+        let currentChartView = 'bar';
+        let allTransactions = [];
+        let filteredTransactions = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 5;
+        let portfolioData = null;
+
+        // ========== DATA LOADING FROM LOCALSTORAGE ==========
+        function loadPortfolioData() {
+            // Load portfolio state from main app
+            const portfolioState = localStorage.getItem('portfolioState');
+            const savedPortfolios = localStorage.getItem('savedPortfolios');
+
+            let currentCapital = 45000;
+            let customAssets = [];
+            let monthlyContrib = 2000;
+
+            if (portfolioState) {
+                try {
+                    const state = JSON.parse(portfolioState);
+                    currentCapital = state.currentCapital || 45000;
+                    customAssets = state.customAssets || [];
+                    monthlyContrib = parseFloat(state.monthlyContrib) || 2000;
+                } catch (e) {
+                    console.log('Error parsing portfolioState:', e);
+                }
+            }
+
+            // Calculate allocation percentages
+            let allocation = {};
+            if (customAssets.length > 0) {
+                customAssets.forEach(asset => {
+                    allocation[asset.name] = Math.round((asset.ratio || 0) * 100);
+                });
+            } else {
+                // Default allocation
+                allocation = { 'S&P 500': 45, 'Bitcoin': 35, 'Liquidez': 20 };
+            }
+
+            // Calculate liquidity (assets named with "liquidez", "fondo", "letra", "cash")
+            let liquidez = 0;
+            customAssets.forEach(asset => {
+                const name = asset.name.toLowerCase();
+                if (name.includes('liquidez') || name.includes('fondo') || name.includes('letra') || name.includes('cash') || name.includes('money market')) {
+                    liquidez += currentCapital * (asset.ratio || 0);
+                }
+            });
+            if (liquidez === 0) {
+                liquidez = currentCapital * 0.2; // Default 20% liquidity
+            }
+
+            // Simulate YTD return (based on stored data or mock)
+            const ytdReturn = calculateYTDReturn(currentCapital, monthlyContrib);
+
+            portfolioData = {
+                currentCapital,
+                customAssets,
+                allocation,
+                liquidez,
+                ytdReturn,
+                monthlyContrib
+            };
+
+            // Load transactions from localStorage or generate from portfolios
+            loadTransactions(savedPortfolios);
+
+            return portfolioData;
+        }
+
+        function calculateYTDReturn(capital, monthly) {
+            // Simple mock calculation - in real app would use actual historical data
+            const estimatedGrowth = capital * 0.124; // 12.4% mock
+            return 12.4;
+        }
+
+        function loadTransactions(savedPortfoliosJson) {
+            allTransactions = [];
+
+            // Load from dashboardTransactions if exists
+            const storedTx = localStorage.getItem('dashboardTransactions');
+            if (storedTx) {
+                try {
+                    allTransactions = JSON.parse(storedTx);
+                } catch (e) { }
+            }
+
+            // If no transactions, generate from saved portfolios
+            if (allTransactions.length === 0 && savedPortfoliosJson) {
+                try {
+                    const data = JSON.parse(savedPortfoliosJson);
+                    if (data.portfolios && data.portfolios.length > 0) {
+                        data.portfolios.forEach(p => {
+                            // Generate transaction for each portfolio save
+                            allTransactions.push({
+                                id: p.id,
+                                asset: 'Portafolio',
+                                icon: '📁',
+                                operation: 'Guardado',
+                                amount: 0,
+                                status: 'Completado',
+                                date: formatDate(p.timestamp),
+                                timestamp: p.timestamp
+                            });
+                        });
+                    }
+                } catch (e) { }
+            }
+
+            // If still empty, add sample transactions
+            if (allTransactions.length === 0) {
+                const now = Date.now();
+                allTransactions = [
+                    { id: 1, asset: 'Bitcoin', icon: '₿', operation: 'Compra', amount: 500, status: 'Completado', date: formatDate(now - 86400000), timestamp: now - 86400000 },
+                    { id: 2, asset: 'S&P 500 (SPY)', icon: '📈', operation: 'Compra', amount: 1000, status: 'Completado', date: formatDate(now - 86400000 * 3), timestamp: now - 86400000 * 3 },
+                    { id: 3, asset: 'Bitcoin', icon: '₿', operation: 'Venta', amount: 200, status: 'Completado', date: formatDate(now - 86400000 * 11), timestamp: now - 86400000 * 11 },
+                    { id: 4, asset: 'Portafolio', icon: '⚖️', operation: 'Rebalanceo', amount: 0, status: 'Pendiente', date: formatDate(now - 86400000 * 16), timestamp: now - 86400000 * 16 },
+                    { id: 5, asset: 'Fondo Itaú', icon: '🏦', operation: 'Compra', amount: 2500, status: 'Completado', date: formatDate(now - 86400000 * 30), timestamp: now - 86400000 * 30 },
+                ];
+            }
+
+            // Sort by date descending
+            allTransactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            filteredTransactions = [...allTransactions];
+        }
+
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`;
+        }
+
+        function saveTransaction(tx) {
+            tx.id = Date.now();
+            tx.timestamp = Date.now();
+            tx.date = formatDate(Date.now());
+            tx.status = 'Completado';
+            allTransactions.unshift(tx);
+            filteredTransactions = [...allTransactions];
+            localStorage.setItem('dashboardTransactions', JSON.stringify(allTransactions));
+            renderTransactions();
+            updatePagination();
+        }
+
+        // ========== UPDATE UI WITH REAL DATA ==========
+        function updateKPIs() {
+            if (!portfolioData) return;
+
+            document.getElementById('kpi-patrimonio').textContent = formatCurrency(portfolioData.currentCapital);
+            document.getElementById('kpi-retorno').textContent = '+' + portfolioData.ytdReturn.toFixed(1) + '%';
+            document.getElementById('kpi-liquidez').textContent = formatCurrency(portfolioData.liquidez);
+            document.getElementById('allocation-total').textContent = formatCurrency(portfolioData.currentCapital);
+            document.getElementById('portfolio-value').textContent = formatCurrency(portfolioData.currentCapital);
+
+            // Update allocation bars
+            updateAllocationBars();
+        }
+
+        function updateAllocationBars() {
+            const container = document.getElementById('allocation-bars');
+            if (!container || !portfolioData) return;
+
+            const assets = portfolioData.customAssets.length > 0
+                ? portfolioData.customAssets.slice(0, 3)
+                : [
+                    { name: 'S&P 500', ratio: 0.45 },
+                    { name: 'Bitcoin', ratio: 0.35 },
+                    { name: 'Liquidez', ratio: 0.20 }
+                ];
+
+            const colors = ['primary-500', 'primary-600', 'primary-700'];
+            const darkColors = ['primary-400', 'primary-300', 'primary-200'];
+
+            container.innerHTML = assets.map((asset, i) => `
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[13px] font-medium text-slate-700 dark:text-white/80">${asset.name}</span>
+                        <span class="text-[13px] font-semibold text-${colors[i]} dark:text-${darkColors[i]}">${Math.round(asset.ratio * 100)}%</span>
+                    </div>
+                    <div class="h-2 bg-slate-200 dark:bg-dark-surface3 rounded-full overflow-hidden">
+                        <div class="h-full bg-${colors[i]} dark:bg-${darkColors[i]} rounded-full" style="width: ${asset.ratio * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatCurrency(value) {
+            return '$' + (value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // ========== THEME TOGGLE ==========
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+
+            // Reinitialize chart with new theme colors
+            if (portfolioChart) {
+                portfolioChart.destroy();
+                initChart(currentChartView);
+            }
+
+            // Re-render transactions for theme
+            renderTransactions();
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            const icon = document.getElementById('theme-icon');
+
+            if (saved === 'light') {
+                document.documentElement.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // ========== CHART WITH THEME SUPPORT ==========
+        function getChartColors() {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                barDefault: isDark ? '#182231' : '#E2E8F0',
+                barHighlight: '#C6FF34',
+                gridColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.08)',
+                tickColor: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(15,23,42,0.6)',
+                tooltipBg: isDark ? '#0F141B' : '#FFFFFF',
+                tooltipBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)',
+                tooltipTitle: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(15,23,42,0.9)',
+                tooltipBody: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(15,23,42,0.7)'
+            };
+        }
+
+        function generateChartData() {
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const capital = portfolioData?.currentCapital || 45000;
+            const monthly = portfolioData?.monthlyContrib || 2000;
+
+            // Generate realistic growth curve
+            const data = [];
+            let balance = capital * 0.7; // Start at 70% of current
+            const monthlyGrowth = 0.008; // ~10% annual
+
+            for (let i = 0; i < 12; i++) {
+                balance = balance * (1 + monthlyGrowth) + (monthly * (Math.random() * 0.5 + 0.5));
+                data.push(Math.round(balance));
+            }
+
+            // Ensure last value matches current capital
+            data[11] = capital;
+
+            return { months, data };
+        }
+
+        function initChart(type = 'bar') {
+            const ctx = document.getElementById('portfolio-chart').getContext('2d');
+            const colors = getChartColors();
+            const { months, data } = generateChartData();
+
+            const currentMonthIndex = new Date().getMonth();
+
+            const backgroundColors = data.map((_, i) =>
+                i === currentMonthIndex ? colors.barHighlight : colors.barDefault
+            );
+
+            const config = {
+                type: type,
+                data: {
+                    labels: months,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: type === 'bar' ? backgroundColors : 'rgba(198, 255, 52, 0.1)',
+                        borderColor: type === 'line' ? '#C6FF34' : undefined,
+                        borderRadius: type === 'bar' ? 8 : 0,
+                        borderSkipped: false,
+                        barThickness: 32,
+                        maxBarThickness: 44,
+                        fill: type === 'line',
+                        tension: type === 'line' ? 0.4 : 0,
+                        pointBackgroundColor: type === 'line' ? '#C6FF34' : undefined,
+                        pointRadius: type === 'line' ? 4 : 0,
+                        pointHoverRadius: type === 'line' ? 6 : 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.tooltipBg,
+                            borderColor: colors.tooltipBorder,
+                            borderWidth: 1,
+                            titleColor: colors.tooltipTitle,
+                            bodyColor: colors.tooltipBody,
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: (ctx) => `$${ctx.parsed.y.toLocaleString()}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.tickColor,
+                                font: { size: 11 }
+                            },
+                            border: { display: false }
+                        },
+                        y: {
+                            grid: {
+                                color: colors.gridColor,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: colors.tickColor,
+                                font: { size: 11 },
+                                callback: (value) => '$' + (value / 1000) + 'k'
+                            },
+                            border: { display: false }
+                        }
+                    }
+                }
+            };
+
+            portfolioChart = new Chart(ctx, config);
+        }
+
+        function setChartView(view) {
+            currentChartView = view;
+            const isDark = document.documentElement.classList.contains('dark');
+
+            const barBtn = document.getElementById('view-bar');
+            const lineBtn = document.getElementById('view-line');
+
+            if (view === 'bar') {
+                barBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-dark-surface3 text-slate-800 dark:text-white/90 transition-all shadow-sm dark:shadow-none';
+                lineBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/70 transition-all';
+            } else {
+                lineBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-dark-surface3 text-slate-800 dark:text-white/90 transition-all shadow-sm dark:shadow-none';
+                barBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/70 transition-all';
+            }
+
+            // Destroy and recreate chart
+            if (portfolioChart) {
+                portfolioChart.destroy();
+            }
+            initChart(view);
+        }
+
+        // ========== TRANSACTIONS TABLE ==========
+        function renderTransactions() {
+            const tbody = document.getElementById('transactions-body');
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageTransactions = filteredTransactions.slice(start, end);
+
+            if (pageTransactions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-500 dark:text-white/50">
+                            No se encontraron transacciones
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = pageTransactions.map(tx => `
+                <tr class="border-b border-slate-100 dark:border-white/6 table-row-hover transition-colors">
+                    <td class="py-4 px-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-lg">${tx.icon || '📄'}</span>
+                            <span class="text-[13px] font-medium text-slate-700 dark:text-white/80">${tx.asset}</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${getOperationClass(tx.operation)}">
+                            ${tx.operation}
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        <span class="text-[13px] font-semibold text-slate-700 dark:text-white/80">
+                            ${tx.amount > 0 ? '$' + tx.amount.toLocaleString() + '.00' : '—'}
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusClass(tx.status)}">
+                            <i class="fa-solid ${tx.status === 'Completado' ? 'fa-check-circle' : 'fa-clock'} text-[10px]"></i>
+                            ${tx.status}
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        <span class="text-[13px] text-slate-500 dark:text-white/50">${tx.date}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getOperationClass(op) {
+            switch (op) {
+                case 'Compra': return 'bg-green-500/14 text-green-500 dark:text-green-400';
+                case 'Venta': return 'bg-red-500/14 text-red-500 dark:text-red-400';
+                case 'Rebalanceo': return 'bg-secondary-500/16 text-secondary-500 dark:text-secondary-400';
+                case 'Guardado': return 'bg-blue-500/14 text-blue-500 dark:text-blue-400';
+                default: return 'bg-slate-100 dark:bg-dark-surface3 text-slate-600 dark:text-white/60';
+            }
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Completado': return 'bg-green-500/14 text-green-500 dark:text-green-400';
+                case 'Pendiente': return 'bg-yellow-500/14 text-yellow-500 dark:text-yellow-400';
+                default: return 'bg-slate-100 dark:bg-dark-surface3 text-slate-600 dark:text-white/60';
+            }
+        }
+
+        // ========== SEARCH & FILTERS ==========
+        function setupSearch() {
+            // Top bar search
+            const topSearch = document.querySelector('header input[type="text"]');
+            if (topSearch) {
+                topSearch.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    filterTransactions(query);
+                });
+            }
+
+            // Transaction search
+            const txSearch = document.querySelector('.dashboard-card input[placeholder*="transacción"]');
+            if (txSearch) {
+                txSearch.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    filterTransactions(query);
+                });
+            }
+        }
+
+        function filterTransactions(query) {
+            if (!query) {
+                filteredTransactions = [...allTransactions];
+            } else {
+                filteredTransactions = allTransactions.filter(tx =>
+                    tx.asset.toLowerCase().includes(query) ||
+                    tx.operation.toLowerCase().includes(query) ||
+                    tx.date.toLowerCase().includes(query)
+                );
+            }
+            currentPage = 1;
+            renderTransactions();
+            updatePagination();
+        }
+
+        // ========== PAGINATION ==========
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+            const paginationText = document.querySelector('.dashboard-card .text-xs.text-slate-500');
+
+            if (paginationText) {
+                const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+                const end = Math.min(currentPage * ITEMS_PER_PAGE, filteredTransactions.length);
+                paginationText.textContent = `Mostrando ${start}-${end} de ${filteredTransactions.length} movimientos`;
+            }
+
+            // Update page buttons
+            const pageButtons = document.querySelectorAll('.pagination-btn');
+            pageButtons.forEach((btn, i) => {
+                const pageNum = i + 1;
+                if (pageNum === currentPage) {
+                    btn.className = 'w-8 h-8 flex items-center justify-center rounded-lg bg-primary-500 dark:bg-primary-400 text-white dark:text-dark-bg font-semibold text-xs';
+                } else {
+                    btn.className = 'w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-dark-surface3 text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80 transition-colors text-xs';
+                }
+            });
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderTransactions();
+            updatePagination();
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTransactions();
+                updatePagination();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTransactions();
+                updatePagination();
+            }
+        }
+
+        // ========== MODALS ==========
+        function showAportarModal() {
+            document.getElementById('aportar-modal').classList.remove('hidden');
+            document.getElementById('aportar-modal').classList.add('flex');
+        }
+
+        function closeAportarModal() {
+            document.getElementById('aportar-modal').classList.add('hidden');
+            document.getElementById('aportar-modal').classList.remove('flex');
+        }
+
+        function showRebalancearModal() {
+            document.getElementById('rebalancear-modal').classList.remove('hidden');
+            document.getElementById('rebalancear-modal').classList.add('flex');
+        }
+
+        function closeRebalancearModal() {
+            document.getElementById('rebalancear-modal').classList.add('hidden');
+            document.getElementById('rebalancear-modal').classList.remove('flex');
+        }
+
+        function confirmarAporte() {
+            const amountInput = document.querySelector('#aportar-modal input[type="number"]');
+            const amount = parseFloat(amountInput?.value) || 0;
+
+            if (amount <= 0) {
+                showToast('Ingresa un monto válido', 'error');
+                return;
+            }
+
+            // Save transaction
+            saveTransaction({
+                asset: 'Aporte',
+                icon: '💰',
+                operation: 'Compra',
+                amount: amount
+            });
+
+            // Update capital in localStorage
+            if (portfolioData) {
+                portfolioData.currentCapital += amount;
+                const state = JSON.parse(localStorage.getItem('portfolioState') || '{}');
+                state.currentCapital = portfolioData.currentCapital;
+                localStorage.setItem('portfolioState', JSON.stringify(state));
+                updateKPIs();
+
+                // Refresh chart
+                if (portfolioChart) {
+                    portfolioChart.destroy();
+                    initChart(currentChartView);
+                }
+            }
+
+            closeAportarModal();
+            showToast('Aporte de ' + formatCurrency(amount) + ' registrado', 'success');
+
+            // Clear input
+            if (amountInput) amountInput.value = '';
+        }
+
+        function confirmarRebalanceo() {
+            closeRebalancearModal();
+
+            // Redirect to rebalance mode in main app
+            window.location.href = 'index.html#rebalance';
+        }
+
+        // ========== TOAST NOTIFICATIONS ==========
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msg = document.getElementById('toast-message');
+
+            msg.textContent = message;
+
+            if (type === 'success') {
+                icon.className = 'fa-solid fa-check-circle text-green-400';
+            } else if (type === 'error') {
+                icon.className = 'fa-solid fa-times-circle text-red-400';
+            } else {
+                icon.className = 'fa-solid fa-info-circle text-secondary-400';
+            }
+
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // ========== TOP BAR ACTIONS ==========
+        function generateReport() {
+            showToast('Generando reporte PDF...', 'info');
+
+            const element = document.querySelector('.max-w-7xl');
+            const opt = {
+                margin: 10,
+                filename: 'plan_semilla_dashboard_' + new Date().toISOString().split('T')[0] + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast('Reporte PDF descargado', 'success');
+            }).catch(err => {
+                showToast('Error generando PDF', 'error');
+                console.error(err);
+            });
+        }
+
+        function exportData() {
+            showToast('Exportando datos...', 'info');
+
+            const exportData = {
+                generatedAt: new Date().toISOString(),
+                portfolio: portfolioData,
+                transactions: allTransactions
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'plan_semilla_datos_' + new Date().toISOString().split('T')[0] + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Datos exportados a JSON', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+
+                        // Import portfolio data
+                        if (data.portfolio) {
+                            const state = JSON.parse(localStorage.getItem('portfolioState') || '{}');
+                            state.currentCapital = data.portfolio.currentCapital || state.currentCapital;
+                            state.customAssets = data.portfolio.customAssets || state.customAssets;
+                            localStorage.setItem('portfolioState', JSON.stringify(state));
+                        }
+
+                        // Import transactions
+                        if (data.transactions && Array.isArray(data.transactions)) {
+                            allTransactions = data.transactions;
+                            filteredTransactions = [...allTransactions];
+                            localStorage.setItem('dashboardTransactions', JSON.stringify(allTransactions));
+                        }
+
+                        // Reload everything
+                        loadPortfolioData();
+                        updateKPIs();
+                        renderTransactions();
+                        updatePagination();
+
+                        if (portfolioChart) {
+                            portfolioChart.destroy();
+                            initChart(currentChartView);
+                        }
+
+                        showToast('Datos importados correctamente', 'success');
+                    } catch (err) {
+                        showToast('Error importando datos', 'error');
+                        console.error(err);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ========== INITIALIZE ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadPortfolioData();
+            updateKPIs();
+            initChart(currentChartView);
+            renderTransactions();
+            updatePagination();
+            setupSearch();
+
+            // Setup pagination buttons
+            document.querySelectorAll('[onclick*="goToPage"]').forEach(btn => {
+                btn.classList.add('pagination-btn');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

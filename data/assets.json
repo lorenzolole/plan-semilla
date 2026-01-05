@@ -1,0 +1,98 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-12-28",
+  "assets": {
+    "S&P 500": {
+      "color": "#10B981",
+      "expectedReturn": 9,
+      "riskLevel": "medio",
+      "description": "Índice de las 500 empresas más grandes de EE.UU.",
+      "ticker": "VOO",
+      "category": "acciones"
+    },
+    "Bitcoin": {
+      "color": "#F59E0B",
+      "expectedReturn": 15,
+      "riskLevel": "muy alto",
+      "description": "Criptomoneda descentralizada, reserva de valor digital",
+      "ticker": "BTC",
+      "category": "crypto",
+      "livePrice": true
+    },
+    "Fondo Liquidez": {
+      "color": "#3B82F6",
+      "expectedReturn": 8,
+      "riskLevel": "bajo",
+      "description": "Fondo de inversión en pesos uruguayos",
+      "ticker": null,
+      "category": "fondos"
+    },
+    "Efectivo": {
+      "color": "#64748B",
+      "expectedReturn": 0,
+      "riskLevel": "ninguno",
+      "description": "Capital sin invertir, liquidez inmediata",
+      "ticker": null,
+      "category": "efectivo"
+    },
+    "Oro": {
+      "color": "#FCD34D",
+      "expectedReturn": 5,
+      "riskLevel": "bajo",
+      "description": "Metal precioso, cobertura contra inflación",
+      "ticker": "GLD",
+      "category": "commodities"
+    },
+    "Bonos UI": {
+      "color": "#6366F1",
+      "expectedReturn": 10,
+      "riskLevel": "bajo",
+      "description": "Bonos uruguayos indexados a inflación",
+      "ticker": null,
+      "category": "bonos"
+    },
+    "Nasdaq 100": {
+      "color": "#8B5CF6",
+      "expectedReturn": 12,
+      "riskLevel": "alto",
+      "description": "Índice de las 100 mayores empresas tecnológicas",
+      "ticker": "QQQ",
+      "category": "acciones"
+    },
+    "Bonos USA": {
+      "color": "#94A3B8",
+      "expectedReturn": 4,
+      "riskLevel": "muy bajo",
+      "description": "Bonos del Tesoro de EE.UU.",
+      "ticker": "TLT",
+      "category": "bonos"
+    }
+  },
+  "modes": {
+    "normie": {
+      "heroTitle": "Crecimiento Equilibrado",
+      "heroDesc": "Estrategia clásica basada en \"Stocks for the Long Run\". Maximiza interés compuesto.",
+      "allocDesc": "Cartera 60/40 optimizada según Graham y Bogle.",
+      "allocation": [
+        { "asset": "S&P 500", "percentage": 60 },
+        { "asset": "Fondo Liquidez", "percentage": 40 }
+      ]
+    },
+    "sovereign": {
+      "heroTitle": "Protocolo Fortaleza",
+      "heroDesc": "Estrategia \"Barbell\" (Taleb) para resistir el Great Reset y CBDCs.",
+      "allocDesc": "Cartera Asimétrica: Soberanía incensurable + Crecimiento agresivo.",
+      "allocation": [
+        { "asset": "Bitcoin", "percentage": 35 },
+        { "asset": "S&P 500", "percentage": 45 },
+        { "asset": "Fondo Liquidez", "percentage": 20 }
+      ]
+    }
+  },
+  "livePriceAPIs": {
+    "bitcoin": {
+      "url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+      "path": "bitcoin.usd"
+    }
+  }
+}
