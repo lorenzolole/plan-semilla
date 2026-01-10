@@ -2949,6 +2949,7 @@
     </main>
 
     <script src="historical_data.js"></script>
+    <script src="config.js"></script>
     <script>
         // --- 1. GLOBAL CONFIG ---
 
@@ -2962,7 +2963,7 @@
         // =========================================================================
         // ⚠️ FALLBACK: API Key (solo si el backend no está disponible)
         // =========================================================================
-        let apiKey = "AIzaSyDRy7_Jsz4BOGTRSbDz2hUoPzlUWHJfNew";
+        let apiKey = (typeof CONFIG !== 'undefined' && CONFIG.GEMINI_API_KEY) ? CONFIG.GEMINI_API_KEY : "";
 
         let currentMode = 'normal';
         let currentCapital = 45000;
